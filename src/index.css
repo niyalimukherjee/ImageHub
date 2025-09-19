@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* masonry helpers */
+.masonry-columns img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.break-inside-avoid {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+}
+/* Add subtle page background gradient and spacing polish */
+body {
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 60%);
+}
+
+/* small utility for subtle card rounding shadow */
+.card-soft-shadow {
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+}
+
+/* optional line-clamp fallback if not using Tailwind plugin */
+.line-clamp-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
