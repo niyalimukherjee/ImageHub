@@ -5,6 +5,9 @@ import Register from "./pages/Register";
 import Gallery from "./pages/Gallery";
 import Upload from "./pages/Upload";
 import Profile from "./pages/Profile";
+import SearchResults from "./pages/SearchResults";
+import SharedInline from "./pages/SharedInline";
+import SharedById from "./pages/SharedById";
 function App() {
   return (
     <Router>
@@ -15,7 +18,9 @@ function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/upload" element={<Upload />} />
          <Route path="/profile" element={<Profile/>} />
-         
+         <Route path="/search" element={<SearchResults />} />
+         <Route path="/share/inline/:payload" element={<SharedInline />} />
+<Route path="/share/id/:id" element={<SharedById />} />
       </Routes>
     </Router>
   );

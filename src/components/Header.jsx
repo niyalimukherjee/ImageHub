@@ -1,151 +1,105 @@
-// src/components/Header.jsx
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getCurrentUser, logout as apiLogout } from "../lib/apiClient"; // adjust path if needed
+import { IconButton, Menu, MenuItem } from "@mui/material";
+import { Search, Notifications, AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
 
 export default function Header() {
-  const [user, setUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const open = Boolean(anchorEl);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    let mounted = true;
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setLoadingUser(false);
-      return;
-    }
+  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
 
-    getCurrentUser()
-      .then((u) => {
-        if (!mounted) return;
-        setUser(u);
-      })
-      .catch((err) => {
-        console.warn("Failed to get current user:", err);
-        localStorage.removeItem("token");
-        setUser(null);
-      })
-      .finally(() => {
-        if (mounted) setLoadingUser(false);
-      });
+  // Update search query on input change
+  const handleSearchChange = (e) => setSearchQuery(e.target.value);
 
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const handleLogout = () => {
-    try {
-      apiLogout?.();
-    } catch (e) {
-      // ignore
-    }
-    localStorage.removeItem("token");
-    setUser(null);
-    try {
-      navigate("/login");
-    } catch {
-      window.location.href = "/login";
-    }
-  };
-
-  const goToUpload = () => {
-    try {
-      navigate("/upload");
-    } catch {
-      window.location.href = "/upload";
+  // Handle pressing Enter or triggering search
+  const handleSearchSubmit = (e) => {
+    if (e.key === "Enter" || e.type === "click") {
+      if (searchQuery.trim()) {
+        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+        setSearchQuery("");
+        handleMenuClose();
+      }
     }
   };
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold text-gray-900">Image Hub</h1>
-            </Link>
+    <header className="w-full bg-white shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 gap-4">
+        
+        {/* Logo / Brand */}
+        <Link to="/" className="flex items-center gap-2">
+          <span className="font-bold text-lg text-gray-800">Image~Hub</span>
+        </Link>
 
-            <div className="hidden sm:flex items-center bg-gray-100 rounded-lg px-2 py-1 gap-2">
-              <svg
-                className="w-5 h-5 text-gray-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
+        {/* Search bar - hidden on small screens
+        <div className="hidden sm:flex flex-1 max-w-xl">
+          <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-full">
+            <Search className="text-gray-500 mr-2" />
+            <input
+              type="text"
+              placeholder="Search images"
+              className="w-full bg-transparent focus:outline-none text-sm"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onKeyDown={handleSearchSubmit}
+            />
+          </div>
+        </div> */}
+
+        {/* Actions */}
+        <div className="hidden sm:flex items-center gap-2">
+          <IconButton>
+            <Notifications />
+          </IconButton>
+          <Link to="/profile">
+            <IconButton>
+              <AccountCircle />
+            </IconButton>
+          </Link>
+        </div>
+
+        {/* Hamburger menu for small screens */}
+        <div className="sm:hidden">
+          <IconButton onClick={handleMenuOpen}>
+            <MenuIcon />
+          </IconButton>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleMenuClose}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            {/* Search inside dropdown */}
+            <MenuItem disableRipple>
+              <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 w-full">
+                <Search className="text-gray-500 mr-2" fontSize="small" />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="w-full bg-transparent focus:outline-none text-sm"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onKeyDown={handleSearchSubmit}
                 />
-              </svg>
-              <input
-                type="search"
-                placeholder="Search images, categories..."
-                className="bg-transparent text-sm placeholder-gray-500 focus:outline-none px-2"
-                aria-label="Search images"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {/* Upload button (visible on all sizes) */}
-            <button
-              onClick={goToUpload}
-              className="inline-flex items-center gap-2 px-3 py-2 bg-white border rounded-lg hover:shadow"
-              type="button"
-              aria-label="Upload"
-            >
-              <svg
-                className="w-5 h-5 text-gray-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-              <span className="text-sm font-medium text-gray-700">Upload</span>
-            </button>
-
-            {/* Auth buttons */}
-            {loadingUser ? (
-              <div className="px-3 py-2 rounded-lg text-sm text-gray-600">Checking...</div>
-            ) : user ? (
-              <div className="flex items-center gap-3">
-                {/* Avatar + username link to profile */}
-                <Link
-                  to="/profile"
-                  className="hidden sm:flex items-center gap-2 no-underline hover:opacity-90"
-                  title="View profile"
-                >
-                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-700">
-                    {user.username?.[0]?.toUpperCase() ?? "U"}
-                  </div>
-                  <div className="text-sm text-gray-700">{user.username}</div>
-                </Link>
-
-                <button
-                  onClick={handleLogout}
-                  className="px-3 py-2 bg-red-50 text-red-700 rounded-lg border hover:bg-red-100"
-                >
-                  Sign out
-                </button>
               </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link to="/login" className="px-3 py-2 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700">
-                  Sign in
-                </Link>
-                <Link to="/register" className="px-3 py-2 border rounded-lg hover:shadow hidden md:inline-flex">
-                  Register
-                </Link>
-              </div>
-            )}
-          </div>
+            </MenuItem>
+
+            {/* Notifications */}
+            <MenuItem onClick={handleMenuClose}>
+              <Notifications className="mr-2" fontSize="small" /> Notifications
+            </MenuItem>
+
+            {/* Profile */}
+            <MenuItem component={Link} to="/profile" onClick={handleMenuClose}>
+              <AccountCircle className="mr-2" fontSize="small" /> Profile
+            </MenuItem>
+          </Menu>
         </div>
       </div>
     </header>

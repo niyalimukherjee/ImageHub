@@ -1,10 +1,14 @@
 // src/pages/Gallery.jsx
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { fetchPublicImages } from "../lib/apiClient"; // ensure path matches
+import { Typography, Button, CircularProgress } from "@mui/material";
+
+import { fetchPublicImages } from "../lib/apiClient";
 import Header from "../components/Header";
 import ImageCard from "../components/ImageCard";
-import Lightbox from "../components/LightBox";
+// replaced Lightbox with ImageModal
+import ImageModal from "../components/ImageModal";
 
 export default function Gallery() {
   const [images, setImages] = useState([]);
@@ -21,7 +25,6 @@ export default function Gallery() {
     fetchPublicImages()
       .then((data) => {
         if (!mounted) return;
-        // backend may return array or object; ensure array
         if (Array.isArray(data)) setImages(data);
         else if (data && Array.isArray(data.images)) setImages(data.images);
         else setImages([]);
@@ -39,7 +42,6 @@ export default function Gallery() {
     };
   }, []);
 
-  // categories: flatten arrays safely and dedupe
   const categories = Array.from(
     new Set(
       images
@@ -54,52 +56,105 @@ export default function Gallery() {
     : images;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FFFDD0]"> {/* Cream background */}
       <Header />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-6 gap-4">
-          <h2 className="text-3xl font-bold">Discover</h2>
+        {/* Top bar */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <Typography variant="h4" className="font-bold text-gray-800">
+            Discover
+          </Typography>
 
-          <div className="flex items-center gap-3">
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              className="px-3 py-2 border rounded-md bg-white"
-            >
-              <option value="">All categories</option>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            {/* Filter chips */}
+            <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap">
+              <button
+                onClick={() => setFilter("")}
+                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition
+                  ${
+                    filter === ""
+                      ? "bg-yellow-600 text-white"
+                      : "bg-yellow-200 text-gray-800 hover:bg-yellow-300"
+                  }`}
+              >
+                All
+              </button>
+
               {categories.map((c) => (
-                <option key={c} value={c}>
+                <button
+                  key={c}
+                  onClick={() => setFilter(c)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition
+                    ${
+                      filter === c
+                        ? "bg-yellow-600 text-white"
+                        : "bg-yellow-200 text-gray-800 hover:bg-yellow-300"
+                    }`}
+                >
                   {c}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
 
-            <Link to="/upload" className="px-3 py-2 bg-blue-600 text-white rounded-md">
-              Upload
+            {/* Upload button */}
+            <Link to="/upload">
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: "#D97706", // amber-600
+                  "&:hover": { bgcolor: "#B45309" }, // darker amber
+                  borderRadius: "9999px", // pill shape
+                  textTransform: "none",
+                  px: 3,
+                  py: 1,
+                }}
+              >
+                Upload
+              </Button>
             </Link>
           </div>
         </div>
 
+        {/* Content section */}
         {loading ? (
-          <div className="py-12 text-center text-gray-600">Loading images…</div>
+          <div className="flex justify-center py-20">
+            <CircularProgress />
+          </div>
         ) : error ? (
-          <div className="py-12 text-center text-red-600">Error: {error}</div>
+          <Typography className="text-center text-red-600 py-12">
+            Error: {error}
+          </Typography>
         ) : filtered.length === 0 ? (
-          <div className="py-12 text-center text-gray-600">No images found.</div>
+          <Typography className="text-center text-gray-600 py-12">
+            No images found.
+          </Typography>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6">
             {filtered.map((img) => (
-              <ImageCard
-                key={img._id ?? img.id}
-                img={img}
-                onOpen={() => setOpenImg(img)}
-              />
+              <div key={img._id ?? img.id} className="break-inside-avoid">
+                {/* clicking image opens modal */}
+                <ImageCard img={img} onOpen={() => setOpenImg(img)} />
+              </div>
             ))}
           </div>
         )}
       </div>
 
-      <Lightbox open={!!openImg} img={openImg} onClose={() => setOpenImg(null)} />
+      {/* ImageModal replaces Lightbox */}
+      <ImageModal
+        img={openImg}
+        open={!!openImg}
+        onClose={() => setOpenImg(null)}
+        showShareControls={true}
+        onShareChange={(updated) => {
+          if (!updated || !updated._id) return;
+          // update the images list (so cards reflect new shareLink)
+          setImages((prev) => prev.map((it) => (it._id === updated._id ? { ...it, ...updated } : it)));
+          // also update currently open image (modal content)
+          setOpenImg((prev) => (prev && prev._id === updated._id ? { ...prev, ...updated } : prev));
+        }}
+      />
     </div>
   );
 }

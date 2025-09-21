@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:5000"; // change if deployed
+// api.js
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // Helper to include token if available
 function authHeaders() {
@@ -35,5 +36,15 @@ export async function fetchMyImages() {
   const res = await fetch(`${API_URL}/images/my`, {
     headers: authHeaders(),
   });
+  return res.json();
+}
+
+// NEW: search images (q optional, isPublic optional "true"/"false")
+export async function searchImages(q = "", isPublic = "true") {
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  if (isPublic !== undefined) params.set("isPublic", isPublic);
+  const res = await fetch(`${API_URL}/images/search?${params.toString()}`);
+  if (!res.ok) throw new Error("Search request failed");
   return res.json();
 }
