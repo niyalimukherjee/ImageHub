@@ -53,25 +53,29 @@ Browse public images filtered by categories & user interests
 
 **Folder Structure**
 
-├── middleware/              # Authentication middleware
-│   └── auth.js              # JWT auth logic
-│
-├── models/                  # Mongoose models
-│   ├── Image.js             # Image schema
-│   └── User.js              # User schema
-│
-├── routes/                  # Express route handlers
-│   ├── auth.js              # User login/register routes
-│   └── images.js            # Image upload, fetch, and share routes
-│
-├── utils/                   # Utility functions and integrations
-│   └── cloudinary.js        # Cloudinary image upload config
-│
-├── .env                     # Environment variables
-├── server.js                # Main Express server file
-├── package.json             # Project metadata & dependencies
-├── package-lock.json        # Dependency lock file
-└── readme.md                # Project documentation
+src/
+├── assets/                # Static assets (images, icons, etc.)
+├── components/            # Reusable UI components
+│   ├── Header.jsx         # Navigation header
+│   ├── ImageCard.jsx      # Image card display component
+│   └── LightBox.jsx       # Lightbox/modal for viewing images
+├── lib/                   # Custom libraries or helper functions
+├── pages/                 # Main route pages
+│   ├── Gallery.jsx        # Public/private image gallery
+│   ├── Login.jsx          # User login page
+│   ├── Register.jsx       # User registration page
+│   └── Upload.jsx         # Image upload page
+├── utils/                 # Utility functions and styles
+│   ├── App.css            # Main App styling
+│   ├── App.jsx            # Root App component
+│   └── index.css          # Global styles
+├── main.jsx               # Entry point (renders App)
+
+.gitignore                 # Git ignore rules
+index.html                 # Main HTML template
+package.json               # Project metadata & dependencies
+package-lock.json          # Dependency lock file
+README.md                  # Project documentation
 
 
 ## ⚙️ Tech Stack
