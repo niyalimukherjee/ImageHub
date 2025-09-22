@@ -84,6 +84,11 @@ README.md                  # Project documentation
 - **Tailwind CSS**
 -**MaterialUI**
 - **React Router** (for page navigation)
+- **Node JS**
+- **MulterJS**
+- **JWT**
+-  **Bcrypt**
+-  **Cloudinary**
 
   ## To Clone the repo
   git clone https://github.com/niyalimukherjee/ImageHub.git
