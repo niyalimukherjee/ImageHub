@@ -89,5 +89,5 @@ README.md                  # Project documentation
   git clone https://github.com/niyalimukherjee/ImageHub.git
 
 ##  For backend visit the repository:
-
+https://github.com/niyalimukherjee/ImageHub-backend
 
