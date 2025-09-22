@@ -37,19 +37,19 @@ Filter images by category in public gallery
 
 Toggle image visibility: Public / Private
 
-Generate secure, expiring share links for private images
+
 
 👤 User Profile API
 
 Manage profile info and interests (e.g. art, travel, nature)
 
-Used for personalized content recommendations
+
 
 🌐 Public Gallery API
 
 Browse public images filtered by categories & user interests
 
-Like, favorite, and bookmark images
+
 
 **Folder Structure**
 
