@@ -1,12 +1,93 @@
-# React + Vite
+**📸 ImageHub_Entertainment**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ImageHub is a secure, flexible image management platform where users can upload, categorize, and share images with advanced privacy and personalization features. Designed to foster a visual content community, it also recommends public images based on user interests.
 
-Currently, two official plugins are available:
+Live Link: https://image-hub-swart.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**🚀 Project Goals**
 
-## Expanding the ESLint configuration
+Secure image storage and categorization
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Advanced privacy controls and sharing features
+
+Personalized public image recommendations
+
+Scalable backend using MongoDB & JWT authentication
+
+🧩 Core Features
+🔐 User Authentication
+
+JWT-based secure registration & login
+
+Role-based access where applicable
+
+📤 Image Upload API
+
+Upload images with metadata: title, description, categories
+
+Mark images as public or private
+
+🗂️ Categorization System
+
+Organize images into user-defined categories
+
+Filter images by category in public gallery
+
+🛡️ Privacy Control API
+
+Toggle image visibility: Public / Private
+
+Generate secure, expiring share links for private images
+
+👤 User Profile API
+
+Manage profile info and interests (e.g. art, travel, nature)
+
+Used for personalized content recommendations
+
+🌐 Public Gallery API
+
+Browse public images filtered by categories & user interests
+
+Like, favorite, and bookmark images
+
+**Folder Structure**
+
+src/
+├── assets/                # Static assets (images, icons, etc.)
+├── components/            # Reusable UI components
+│   ├── Header.jsx         # Navigation header
+│   ├── ImageCard.jsx      # Image card display component
+│   └── LightBox.jsx       # Lightbox/modal for viewing images
+├── lib/                   # Custom libraries or helper functions
+├── pages/                 # Main route pages
+│   ├── Gallery.jsx        # Public/private image gallery
+│   ├── Login.jsx          # User login page
+│   ├── Register.jsx       # User registration page
+│   └── Upload.jsx         # Image upload page
+├── utils/                 # Utility functions and styles
+│   ├── App.css            # Main App styling
+│   ├── App.jsx            # Root App component
+│   └── index.css          # Global styles
+├── main.jsx               # Entry point (renders App)
+
+.gitignore                 # Git ignore rules
+index.html                 # Main HTML template
+package.json               # Project metadata & dependencies
+package-lock.json          # Dependency lock file
+README.md                  # Project documentation
+
+## ⚙️ Tech Stack
+
+- **React**
+- **Vite** (build tool)
+- **Tailwind CSS**
+-**MaterialUI**
+- **React Router** (for page navigation)
+
+  ## To Clone the repo
+  git clone https://github.com/niyalimukherjee/ImageHub.git
+
+##  For backend visit the repository:
+
+
